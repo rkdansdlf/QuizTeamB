@@ -1,9 +1,13 @@
 package com.example.demo.order;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.example.demo.order.Orders.DeliveryType;
 import com.example.demo.order.Orders.PaymentMethod;
+import com.example.demo.product.Product;
+import com.example.demo.product.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -12,8 +16,13 @@ import lombok.RequiredArgsConstructor;
 public class OrderService {
 	
 	private final OrderRepository orderRepository;
+	private final ProductRepository productRepository;
 	
-	public void process(OrderDTO orderDTO) {
+	public void process(
+			OrderDTO orderDTO, 
+			OrderItemDTO orderItemDTO, 
+			OrderSummaryDTO summaryDTO
+			) {
 		
 		DeliveryType deliveryType;
 		PaymentMethod paymentMethod;
@@ -46,7 +55,17 @@ public class OrderService {
 				orderDTO.getDeliveryAddress(),
 				orderDTO.getSpecialRequest(),
 				deliveryType,
-				paymentMethod
+				paymentMethod,
+				summaryDTO.getTotalAmount()
+				);
+		
+		Product product 
+			= this.productRepository.findById(orderItemDTO.getProduct().getId()).get();
+		
+		OrderItem orderItem = new OrderItem(
+				order,
+				product,
+				orderItemDTO.getQuantity()
 				);
 		
 		if(orderDTO.isPrivacyAgreed()==true && orderDTO.isTermsAgreed()==true) {
