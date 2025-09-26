@@ -16,6 +16,8 @@ public class MainController {
 
 	private final ProductService productService;
 	
+	// foward:/ -> 타입리프가 아니라 static에 html을 옮겼고 js랑 연동해서 사용하려면 
+	// forward:/를 사용하라고 해서 사용함
     @GetMapping("/products")
     public String showProductsPage() {
         return "forward:/products.html";
@@ -35,10 +37,10 @@ public class MainController {
         return "product-detail";
     }
     
-    @GetMapping("/cart")
-    public String showCartPage() {
-        return "forward:/cart.html";
-    }
+//    @GetMapping("/cart")
+//    public String showCartPage() {
+//        return "forward:/cart.html";
+//    }
 }
 
 
