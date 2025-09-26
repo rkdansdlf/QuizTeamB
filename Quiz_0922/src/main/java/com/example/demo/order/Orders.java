@@ -1,7 +1,10 @@
 package com.example.demo.order;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,6 +44,9 @@ public class Orders {
 
 	private LocalDateTime createdAt;
 	
+	@Column
+	private int totalAmount;
+	
 	@Enumerated(EnumType.STRING)
 	private DeliveryType deliveryType;
 	
@@ -48,18 +55,35 @@ public class Orders {
 	
 	@Enumerated(EnumType.STRING)
 	private DeliverStatus status;
+	
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL) 
+    private List<OrderItem> orderItems = new ArrayList<>();
+	
+	
 
 	public Orders(String receiverName, String receiverPhone, String deliveryAddress, String specialRequest,
-			DeliveryType deliveryType, PaymentMethod paymentMethod) {
+			DeliveryType deliveryType, PaymentMethod paymentMethod, int totalAmount) {
 		this.receiverName = receiverName;
 		this.receiverPhone = receiverPhone;
 		this.deliveryAddress = deliveryAddress;
 		this.specialRequest = specialRequest;
+		
 		this.deliveryType = deliveryType;
 		this.paymentMethod = paymentMethod;
-		this.status = status.SHIPPING;
+
+		this.status = DeliverStatus.SHIPPING;
+		
+		this.totalAmount = totalAmount;
+		
 		this.createdAt = LocalDateTime.now();
+		
+		
 	}
+	
+	public void addOrderItem(OrderItem orderItem) {
+        this.orderItems.add(orderItem);
+        orderItem.setOrder(this); 
+    }
 	
 	
 }
