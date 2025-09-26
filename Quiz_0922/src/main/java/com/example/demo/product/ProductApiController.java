@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ProductApiController {
     // 상품 목록 조회 (필터링, 페이징, 정렬 포함)
     @GetMapping
     public ResponseEntity<Page<ProductDto.ProductListDto>> getProducts(
-            @PageableDefault(size = 12, sort = "createdAt,desc") Pageable pageable,
+    		@PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "memoryType",required = false) String memoryType,
             @RequestParam(name = "price",required = false) String price,
